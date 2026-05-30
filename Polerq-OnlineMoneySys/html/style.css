@@ -1,0 +1,355 @@
+/* ============================================
+   PARA HUD - STYLE.CSS
+   Dark Glass Gaming HUD
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Roboto+Mono:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: transparent;
+    font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+/* ============================================
+   SAĞ ÜST - MONEY HUD
+   ============================================ */
+
+#money-hud {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 9999;
+
+    opacity: 0;
+    transform: translateX(18px) scale(0.98);
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#money-hud.visible {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+
+/* ---- Kart Ortak ---- */
+.hud-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 232px;
+    min-height: 58px;
+    padding: 11px 15px 11px 13px;
+
+    background: rgba(5, 7, 11, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 8px;
+
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transform: translateX(10px);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#money-hud.visible .hud-card {
+    transform: translateX(0);
+}
+
+#money-hud.visible .cash-card {
+    transition-delay: 0.04s;
+}
+
+/* Sol şerit */
+.hud-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 8px 0 0 8px;
+    z-index: 2;
+}
+
+/* Cam kart dokusu */
+.hud-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0.18;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+/* ---- BANKA (Yeşil) ---- */
+.bank-card::before {
+    background: linear-gradient(180deg, #00e676, #00b84c);
+}
+.bank-card::after {
+    background: linear-gradient(90deg, rgba(0, 230, 118, 0.08), transparent 48%);
+}
+.bank-card .card-icon {
+    color: #00e676;
+}
+.bank-card .card-value {
+    color: #00e676;
+    text-shadow: 0 0 12px rgba(0, 230, 118, 0.4);
+}
+.bank-card .card-label {
+    color: rgba(0, 230, 118, 0.55);
+}
+
+/* ---- NAKİT (Altın) ---- */
+.cash-card::before {
+    background: linear-gradient(180deg, #ffd740, #ffab00);
+}
+.cash-card::after {
+    background: linear-gradient(90deg, rgba(255, 215, 64, 0.08), transparent 48%);
+}
+.cash-card .card-icon {
+    color: #ffd740;
+}
+.cash-card .card-value {
+    color: #ffd740;
+    text-shadow: 0 0 12px rgba(255, 215, 64, 0.35);
+}
+.cash-card .card-label {
+    color: rgba(255, 215, 64, 0.55);
+}
+
+/* İkon */
+.card-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    position: relative;
+    z-index: 1;
+}
+
+.card-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* İçerik */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.card-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.card-value {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Güncelleme animasyonu */
+.card-value.updated {
+    animation: valueFlash 0.4s ease forwards;
+}
+
+.hud-card.counting .card-value {
+    animation: valueTick 0.75s ease both;
+}
+
+.hud-card.gain {
+    border-color: rgba(0, 230, 118, 0.42);
+}
+
+.hud-card.loss {
+    border-color: rgba(255, 82, 82, 0.42);
+}
+
+@keyframes valueFlash {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+@keyframes valueTick {
+    0%   { filter: brightness(1); }
+    45%  { filter: brightness(1.45); }
+    100% { filter: brightness(1); }
+}
+
+/* ============================================
+   ALT BİLDİRİM - TRANSACTION NOTIFICATION
+   ============================================ */
+
+#notif-wrapper {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+#notif-box {
+    position: relative;
+    min-width: 220px;
+    background: rgba(5, 7, 11, 0.74);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+
+    transform: translateY(24px) scale(0.95);
+    opacity: 0;
+    transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.28s ease;
+}
+
+#notif-box.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Glow arka plan */
+#notif-glow {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    transition: background 0.2s ease;
+    pointer-events: none;
+}
+
+#notif-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+}
+
+/* Yön İkonu */
+#notif-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+    font-weight: 800;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Metin */
+#notif-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+#notif-amount {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+#notif-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1;
+}
+
+/* Progress bar (bildirim süresi) */
+#notif-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+    transform-origin: left;
+    animation: none;
+}
+
+#notif-progress.running {
+    animation: progressDrain 4s linear forwards;
+}
+
+@keyframes progressDrain {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+/* ---- Pozitif (gelir) ---- */
+#notif-box.positive #notif-icon-wrap {
+    background: rgba(0, 230, 118, 0.15);
+    color: #00e676;
+    border: 1px solid rgba(0, 230, 118, 0.3);
+}
+#notif-box.positive #notif-amount {
+    color: #00e676;
+}
+#notif-box.positive #notif-glow {
+    background: radial-gradient(ellipse at center, #00e676 0%, transparent 70%);
+}
+#notif-box.positive #notif-progress {
+    background: linear-gradient(90deg, #00e676, #00b84c);
+}
+
+/* ---- Negatif (gider) ---- */
+#notif-box.negative #notif-icon-wrap {
+    background: rgba(255, 50, 50, 0.15);
+    color: #ff5252;
+    border: 1px solid rgba(255, 50, 50, 0.3);
+}
+#notif-box.negative #notif-amount {
+    color: #ff5252;
+}
+#notif-box.negative #notif-glow {
+    background: radial-gradient(ellipse at center, #ff5252 0%, transparent 70%);
+}
+#notif-box.negative #notif-progress {
+    background: linear-gradient(90deg, #ff5252, #c62828);
+}
